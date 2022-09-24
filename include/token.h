@@ -4,7 +4,8 @@ typedef struct token_struct
 {
     enum
     {
-        TOKEN_STR,
+        TOKEN_STR = 1,
+        TOKEN_EQUAL ,
         TOKEN_PIPE,
         TOKEN_IN,
         TOKEN_OUT,

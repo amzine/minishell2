@@ -33,29 +33,54 @@ token_t *lexer_get_next_token(lexer_t *lexer)
     {
         if (lexer->c == ' ' || lexer->c == 10)
             lexer_skip_whitespace(lexer);
-
-        
+        if (lexer->c == '"')
+        {
+            return lexer_collect_string(lexer);
+        }
+            
+        if (lexer->c == '=')
+        {
+            return lexer_advance_with_token(lexer ,init_token(TOKEN_EQUAL ,lexer_get_current_char_as_string(lexer)));
+        }
+        if (lexer->c == '|')
+        {
+            return lexer_advance_with_token(lexer, init_token(TOKEN_PIPE, lexer_get_current_char_as_string(lexer)));
+        }
+        if (lexer->c == '<')
+        {
+            return lexer_advance_with_token(lexer, init_token(TOKEN_IN , lexer_get_current_char_as_string(lexer)));
+        }
+        if (lexer->c == '>')
+        {
+            return lexer_advance_with_token(lexer, init_token(TOKEN_OUT , lexer_get_current_char_as_string(lexer)));
+        }
     }
     
 
 }
 token_t *lexer_collect_id(lexer_t *lexer)
 {
-    char *s;
-    char *value;
+   
+}
 
-    value = malloc(sizeof(char));
+token_t *lexer_collect_string(lexer_t *lexer)
+{
+    char *value;
+    char *s;
     lexer_advance(lexer);
-    while (ft_isalnum(lexer->c))
+    value = malloc(sizeof(char));
+    value[0] = '\0';
+
+    while (lexer->c != '"')
     {
         s = lexer_get_current_char_as_string(lexer);
         value = malloc(sizeof(char) * ft_strlen(value) + ft_strlen(s) + 1);
-        
+        ft_strcat(value, s);
     }
-    
-
-
+    lexer_advance(lexer);
+    return init_token(TOKEN_STR, value);
 }
+
 
 token_t *lexer_advance_with_token(lexer_t *lexer, token_t * token)
 {
@@ -65,11 +90,6 @@ token_t *lexer_advance_with_token(lexer_t *lexer, token_t * token)
 }
 
 
-token_t *lexer_collect_string(lexer_t *lexer)
-{
-    
-    
-}
 
 char *lexer_get_current_char_as_string(lexer_t *lexer)
 {
